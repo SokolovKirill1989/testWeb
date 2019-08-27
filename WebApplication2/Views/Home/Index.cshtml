@@ -1,0 +1,127 @@
+﻿@using WebApplication2.Models;
+@using Microsoft.AspNetCore.Html;
+@using Microsoft.AspNetCore.Mvc.Rendering;
+@model CursModel;
+
+
+
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <title>"Курс ЦБ"</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <p id="qrCode"></p>
+
+
+
+
+
+
+    @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+    {
+        <SELECT NAME="Valutes">
+            @{
+                try
+                {
+                    VALUTES vals = ViewBag.Valutes;/*Model.GetValutes()*/;
+                    foreach (Val val in vals)
+                    {
+                        if (@val.Vname.Contains("Евро"))
+                        {
+                            <OPTION VALUE=@val.Vcode selected>
+                                @val.Vname
+                            </OPTION>
+                        }
+                        else
+                        {
+                            <OPTION VALUE=@val.Vcode>
+                                @val.Vname
+                            </OPTION>
+
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    <OPTION VALUE=@ex selected>
+                        @ex
+                    </OPTION>
+                }
+
+            }
+
+        </SELECT>
+
+        <input type="date" name="StartDate" />
+        <input type="date" name="EndDate" />
+        <button name="action" value="GetCurCurs">Текущий курс</button>
+        <button name="action" value="GetDynamicCurs">Динамика</button>
+
+        <p>
+            <table id="data" width = "100%" cellspacing="0" cellpadding="4" border="1">
+                @{
+                    try
+                    {
+                        bool isCur = (bool)ViewBag.Act;
+                        if (isCur)
+                        {
+                            CURSES curs = ViewBag.CurCurs;/*Model.GetValutes()*/;
+                            foreach (CURS c in curs)
+                            {
+
+                                <tr>
+                                    <td>
+                                        @c.Vname
+                                    </td>
+                                    <td>
+                                        @c.VchCode
+                                    </td>
+                                    <td>
+                                        @c.Vcurs
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            DCURSES curs = ViewBag.DynCurs;/*Model.GetValutes()*/;
+                            foreach (DCURS c in curs)
+                            {
+
+                                <tr>
+                                    <td>
+                                        @c.CursDate
+                                    </td>
+                                    <td>
+                                        @c.Vcode
+                                    </td>
+                                    <td>
+                                        @c.Vcurs
+                                    </td>
+                                </tr>
+                            }
+
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        @ex
+                    }
+
+                }
+
+            </table>
+        </p>
+
+    }
+    <div>
+
+
+    </div>
+</body>
+</html>
